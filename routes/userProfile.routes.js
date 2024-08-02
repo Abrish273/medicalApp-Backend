@@ -1,8 +1,18 @@
 const express = require("express");
-const { getUserProfile } = require("../controllers/userProfile.controller");
+const {
+  getUserProfile,
+  getUserProfileAdmin,
+} = require("../controllers/userProfile.controller");
 const authenticateToken = require("../middleware/authmiddleware");
+const checkRole = require("../middleware/checkRole");
 const router = express.Router();
 
-router.get("/profile", authenticateToken, getUserProfile);
+router.get(
+  "/profileAdmin",
+  authenticateToken,
+  checkRole(["admin"]),
+  getUserProfileAdmin
+);
+router.get("/profile", authenticateToken, checkRole(["user"]), getUserProfile);
 
 module.exports = router;
